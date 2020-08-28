@@ -1,11 +1,13 @@
-FROM node:12.14.0-alpine3.11
+FROM node:12.13-alpine
 
-RUN apk add --no-cache bash
+WORKDIR /usr/src/app
 
-RUN touch /home/node/.bashrc | echo "PS1='\w\$ '" >> /home/node/.bashrc
+COPY package*.json ./
 
-RUN npm config set cache /home/node/app/.npm-cache --global
+RUN npm install
 
-USER node
+COPY . .
 
-WORKDIR /home/node/app
+RUN npm run build
+
+CMD ["node", "dist/main"]
